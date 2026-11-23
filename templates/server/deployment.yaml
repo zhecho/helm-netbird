@@ -8,6 +8,14 @@ metadata:
     netbird-app: {{ include "netbird.fullname" . }}-server
 spec:
   replicas: {{ .Values.server.replicaCount }}
+  {{- with .Values.server.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+    {{- if eq .type "Recreate" }}
+    # Explicit null so the upgrade patch removes the live rollingUpdate field
+    rollingUpdate: null
+    {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "netbird.selectorLabels" . | nindent 6 }}

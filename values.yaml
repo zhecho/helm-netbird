@@ -76,6 +76,10 @@ dashboard:
 
 
 server:
+  # Recreate: the data PVC is ReadWriteOnce, so a rolling update deadlocks when the new pod
+  # lands on another node
+  strategy:
+    type: Recreate
   image:
     repository: netbirdio/netbird-server
     tag: 0.66.0
